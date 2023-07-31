@@ -92,5 +92,3 @@ if __name__ == "__main__":
         last_inp_logic()
 
     overall_process()
-
-    # send_notification("Notification Title", "This is the notification message.")
