@@ -9,7 +9,7 @@ def send_notification(title, message):
 
 
 def usr_decision():
-    usr_inp = input("Do you want to keep the record of your working hours?(Y/n): ")
+    usr_inp = input("Do you want to keep the record of your working duration?(Y/n): ")
     if usr_inp.lower() == "y":
         return True
     if usr_inp.lower() == "n":
@@ -24,14 +24,16 @@ if __name__ == "__main__":
         exit()
 
     def get_time():
-        global start_time, work_time, rest_time
-        work_time = float(input("How often do you want to be reminded? "))
-        start_time = time.time()
-        rest_time = float(input("How much rest after each set do you need? "))
+        global work_time, rest_time
+        work_time = float(input("How often do you want to be reminded (per minutes)? "))
+        rest_time = float(
+            input("How much rest after each set do you need (per minutes)? ")
+        )
 
     def work_hours_counter():
         global work_time_finished
         elapsed_time_mins = 0
+        start_time = time.time()
         work_time_finished = False
         while elapsed_time_mins != work_time:
             elapsed_time_mins = (time.time() - start_time) / 60
@@ -41,7 +43,7 @@ if __name__ == "__main__":
                 )
                 send_notification(
                     "REST TIME!",
-                    f"You have been working for {elapsed_time_mins} minutes, take some rest now!",
+                    f"You have been working for {math.ceil(elapsed_time_mins)} minutes, take some rest now!",
                 )
                 work_time_finished = True
                 break
@@ -57,17 +59,17 @@ if __name__ == "__main__":
                 elapsed_rest_mins = (time.time() - rest_time_start) / 60
                 if elapsed_rest_mins >= rest_time:
                     print(
-                        f"You have been working for {elapsed_rest_mins} minutes, take some rest now!"
+                        f"You have been resting for {elapsed_rest_mins} minutes, get back to work!"
                     )
                     send_notification(
-                        "REST TIME!",
-                        f"You have been working for {elapsed_rest_mins} minutes, take some rest now!",
+                        "GET BACK TO WORK!",
+                        f"You have been resting for {math.ceil(elapsed_rest_mins)} minutes, get back to work!",
                     )
                     break
                 else:
                     pass
         usr_last_inp = input(
-            "Do you want to exit the program (e), renew the work and rest time and go again (r) or simply restart the time with the previously set times (p)? "
+            "Do you want to exit the program (e),\nredefine the work and rest time variables and go again (r)\nor simply restart the time with the previously set durations (p)? "
         ).lower()
 
     def overall_process():
